@@ -46,6 +46,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('jwt/check')
   public jwtCheck(@ReqUser() user: Payload): Payload | undefined {
+    console.log(user);
+
     return user;
   }
 }

@@ -1,28 +1,21 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {},
-    "target": "ES2019",
-    "outDir": "dist",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "incremental": true,
     "declaration": true,
-    "newLine": "lf",
-    "strict": true, //= noImplicitAny, noImplicitThis, alwaysStrict, strictBindCallApply, strictNullChecks, strictFunctionTypes, strictPropertyInitialization
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    // "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "removeComments": true,
-    "sourceMap": true,
-    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true, // https://github.com/Microsoft/TypeScript/issues/2577
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "allowSyntheticDefaultImports": true,
+    // "target": "es2017",
+    "target": "ES2019",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "newLine": "lf",
+    "skipLibCheck": false,
+
+    "incremental": true,
+    "moduleResolution": "node"
   },
   "include": ["typings/global.d.ts", "src/**/*"],
   "exclude": ["node_modules"]

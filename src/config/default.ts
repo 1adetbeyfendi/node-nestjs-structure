@@ -17,5 +17,10 @@ export const config = {
     // installSubscriptionHandlers: true,
   },
   hello: 'world',
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: process.env.JWT_SECRET || '8940d87d-c82c-4ae0-be5d-cd770487074c',
+  // commas
+  commas: {
+    autoFetch: true,
+  },
+  strapiApiPath: 'http://localhost:1337',
 };

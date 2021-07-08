@@ -1,0 +1,227 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Date custom scalar type"""
+scalar Date
+
+type Mutation {
+  create(simpleData: SimpleInput!): Simple!
+  getActiveOrders: [MyOrder!]!
+  remove(id: ID!): Boolean!
+}
+
+type MyAccount {
+  class: String
+  id: Float!
+  link: String!
+  market: String!
+  name: String!
+  type: String!
+}
+
+type MyCurrentPrice {
+  ask: String!
+  bid: String!
+  day_change_percent: String
+  last: String!
+  quote_volume: String
+}
+
+type MyLeverage {
+  enabled: Boolean!
+  type: String
+  value: String
+}
+
+type MyMargin {
+  amount: String!
+  total: String!
+}
+
+type MyOrder {
+  account: MyAccount!
+  data: MyOrderData!
+  editable: Boolean
+  id: Float!
+  instant: Boolean!
+  is_position_not_filled: Boolean
+  leverage: MyLeverage!
+  margin: MyMargin
+  note: String!
+  pair: String!
+  position: MyPosition!
+  profit: MyProfit!
+  skip_enter_step: Boolean!
+  status: MyPositionStatus!
+  stop_loss: MyStopLoss!
+  take_profit: MyTakeProfit!
+  version: Float!
+}
+
+type MyOrderData {
+  add_funds_available: Boolean!
+  average_close_price: String!
+  average_close_price_without_commission: String
+  average_enter_price: String!
+  average_enter_price_without_commission: String
+  base_order_finished: Boolean!
+  cancel_available: Boolean!
+  closed_at: String
+  created_at: String!
+  current_price: MyCurrentPrice!
+  editable: Boolean!
+  force_process_available: Boolean!
+  force_start_available: Boolean!
+  liquidation_price: String
+  missing_funds_to_close: String!
+  panic_sell_available: Boolean!
+  target_price_type: String!
+  type: String!
+  updated_at: String!
+}
+
+type MyPosition {
+  conditional: MyPositionConditional
+  editable: Boolean!
+  order_type: String!
+  price: MyPositionPrice!
+  status: MyPositionStatus!
+  total: MyTotal!
+  type: String!
+  units: MyUnits!
+}
+
+type MyPositionConditional {
+  editable: Boolean!
+  order_type: String!
+  price: MyPurplePrice!
+  trailing: MyTrailing!
+}
+
+type MyPositionPrice {
+  editable: Boolean!
+  value: String!
+  value_without_commission: String
+}
+
+type MyPositionStatus {
+  error: String
+  title: String!
+  type: String!
+}
+
+type MyProfit {
+  percent: String
+  roe: String
+  usd: String
+  volume: String
+}
+
+type MyPurplePrice {
+  type: String!
+  value: String!
+}
+
+type MyStep {
+  data: MyStepData!
+  editable: Boolean!
+  id: Float!
+  order_type: String!
+  position: Float!
+  price: MyStepPrice!
+  status: MyPositionStatus!
+  total: String
+  trailing: MyTrailing!
+  units: MyTotal
+  volume: String!
+}
+
+type MyStepData {
+  cancelable: Boolean!
+  panic_sell_available: Boolean!
+}
+
+type MyStepPrice {
+  percent: String
+  type: String!
+  value: String!
+}
+
+type MyStopLoss {
+  conditional: MyStopLossConditional
+  editable: Boolean
+  enabled: Boolean!
+  order_type: String
+  price: MyTotal
+  status: MyStopLossStatus
+  timeout: MyTimeout
+}
+
+type MyStopLossConditional {
+  price: MyStepPrice!
+  trailing: MyTrailing!
+}
+
+type MyStopLossStatus {
+  title: String!
+  type: String!
+}
+
+type MyTakeProfit {
+  enabled: Boolean!
+  steps: [MyStep!]!
+}
+
+type MyTimeout {
+  enabled: Boolean!
+  value: Float!
+}
+
+type MyTotal {
+  value: String!
+}
+
+type MyTrailing {
+  enabled: Boolean!
+  percent: String
+}
+
+type MyUnits {
+  editable: Boolean
+  value: String!
+}
+
+type Payload {
+  roles: [String!]!
+  userId: String!
+  username: String!
+}
+
+type Query {
+  find(content: String, title: String!): [Simple!]!
+  getHello: String!
+  getOrders: String!
+  read(id: ID!): Simple!
+  user: Payload!
+}
+
+type Simple {
+  content: String
+  createdAt: Date
+  id: ID!
+  rating: Float
+  score: Int
+  tags: [String!]
+  title: String!
+}
+
+input SimpleInput {
+  content: String
+  tags: [String!]!
+  title: String!
+}
+
+type Subscription {
+  postAdded: [MyOrder!]!
+}

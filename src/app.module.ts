@@ -1,16 +1,20 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RouterModule } from 'nest-router';
 
 import { AwsModule } from './aws';
 import { BaseModule } from './base';
-import { CommonModule, ExceptionsFilter, LoggerMiddleware } from './common';
+import { CommonModule, ExceptionsFilter, LoggerMiddleware, PubSubModule } from './common';
 import { configuration } from './config';
 import { GqlModule } from './gql';
 import { SampleModule } from './sample';
+import { TradesModule } from './trades/trades.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -27,6 +31,7 @@ import { SampleModule } from './sample';
         entities: [`${__dirname}/entity/**/*.{js,ts}`],
         subscribers: [`${__dirname}/subscriber/**/*.{js,ts}`],
         migrations: [`${__dirname}/migration/**/*.{js,ts}`],
+        synchronize: false,
         ...config.get('db'),
       }),
       inject: [ConfigService],
@@ -40,19 +45,27 @@ import { SampleModule } from './sample';
     }),
     // Module Router
     // https://github.com/nestjsx/nest-router
-    RouterModule.forRoutes([{
-      path: 'aws',
-      module: AwsModule,
-    }, {
-      path: 'test',
-      module: SampleModule,
-    }]),
+    RouterModule.forRoutes([
+      {
+        path: 'aws',
+        module: AwsModule,
+      },
+      {
+        path: 'test',
+        module: SampleModule,
+      },
+    ]),
     // Service Modules
     CommonModule, // Global
     BaseModule,
     SampleModule,
     AwsModule,
     GqlModule,
+    TradesModule,
+    PubSubModule,
+    ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
+    ChatModule,
   ],
   providers: [
     // Global Guard, Authentication check on all routers
