@@ -1,0 +1,67 @@
+positions :  [
+  {
+    id: 7863737,
+    version: 2,
+    account: {
+      id: 30431407,
+      type: 'binance_futures',
+      name: 'Binance Futures USDT-M',
+      market: 'Binance Futures USDT-M',
+      link: '/accounts/30431407'
+    },
+    pair: 'USDT_RUNE',
+    instant: false,
+    status: { type: 'waiting_position', title: 'Pending Position Opened' },
+    leverage: { enabled: true, type: 'isolated', value: '3.0' },
+    position: {
+      type: 'buy',
+      editable: false,
+      units: [Object],
+      price: [Object],
+      total: [Object],
+      order_type: 'market',
+      status: [Object]
+    },
+    take_profit: { enabled: true, steps: [Array] },
+    stop_loss: {
+      enabled: true,
+      order_type: 'market',
+      editable: true,
+      price: [Object],
+      conditional: [Object],
+      timeout: [Object],
+      status: [Object]
+    },
+    note: '',
+    skip_enter_step: false,
+    data: {
+      editable: true,
+      current_price: [Object],
+      target_price_type: 'price',
+      base_order_finished: true,
+      missing_funds_to_close: 0,
+      liquidation_price: null,
+      average_enter_price: null,
+      average_close_price: null,
+      average_enter_price_without_commission: null,
+      average_close_price_without_commission: null,
+      panic_sell_available: false,
+      add_funds_available: false,
+      force_start_available: true,
+      force_process_available: true,
+      cancel_available: true,
+      finished: false,
+      base_position_step_finished: false,
+      created_at: '2021-07-08T08:25:23.821Z',
+      updated_at: '2021-07-08T08:25:23.821Z',
+      type: 'smart_trade'
+    },
+    profit: { volume: null, usd: null, percent: 0, roe: '0.0' },
+    margin: { amount: null, total: null },
+    is_position_not_filled: true
+  }
+]
+local Position :  []
+diff :  []
+
+
