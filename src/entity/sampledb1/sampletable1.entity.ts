@@ -14,9 +14,9 @@ export class Sampletable1 {
   @Column('simple-array')
   tags?: string[];
 
-  @Column('timestamp', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
+  @Column('date', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
   updated_at!: Date;
 
-  @Column('timestamp', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  @Column('date', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   created_at!: Date;
 }
