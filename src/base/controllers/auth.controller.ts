@@ -65,7 +65,7 @@ export class AuthController {
 
       // this.httpService.post('http://localhost:1337/auth/local', data, config).toPromise()
       return this.httpService
-        .post('http://localhost:1337/auth/local', data, config)
+        .post('https://localhost:1339/auth/local', data, config)
         .toPromise()
         .then((x) => {
           // console.log(x);
