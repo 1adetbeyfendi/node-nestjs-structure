@@ -3,9 +3,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, SetMetada
 import { API } from 'src/trades/helper/commas-repo';
 import { TradeCommasService, TradesService } from 'src/trades/services';
 import { CreateTradeDto } from 'src/trades/dto/create-trade.dto';
-import { JwtAuthGuard } from 'src/auth';
+import { JwtAuthGuard, JwtPayload } from 'src/auth';
 import { User } from 'src/shared/user';
 import { ReqUser, Role, Roles, RolesGuard } from 'src/common';
+import { ICreateCommasSmartTrade } from 'src/trades/interfaces/commas.interface';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 // @UseGuards(RolesGuard)
@@ -25,10 +26,17 @@ export class TradesController {
   //#region  crud
 
   @Post()
-  async create(@Body() createTradeDto: CreateTradeDto) {
+  async create(@Body() createTradeDto: ICreateCommasSmartTrade, @ReqUser() user: JwtPayload) {
+    // console.log('createTradeDto ==> ', createTradeDto);
+    // console.log('user ==>', user);
+    // TODO: multi hesaplar için kullanıdan gelecke accountid yapılacak
+    createTradeDto.accountId = user.accId;
+
     const order = await this.commasService.generateSmartTrade(createTradeDto);
-    // await this.api.smartTrade(order);
-    return order;
+    console.log(order);
+
+    return await this.api.smartTrade(order);
+    // return order;
     // TODO: Başarılı olursa store atılacak
     // return this.tradesService.create(createTradeDto);
   }
@@ -87,6 +95,8 @@ export class TradesController {
   @Get(':id/close-by-market')
   closeByMarket(@Param('id') id: number) {
     // return this.api.getSmartTrade(id);
+    console.log(id);
+
     return this.api.closeSmartTrade(id);
   }
 

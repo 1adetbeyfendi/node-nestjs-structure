@@ -19,8 +19,13 @@ export class TradeUserController {
 
   @Get('me')
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  getMe() {
-    return this.api.getAccountInfo();
+  async getMe() {
+    let data = await this.api.getAccountInfo();
+    
+    if(data["api_key"]){
+      delete data["api_key"] 
+    }
+    return data;
   }
 
   @Get('accounts')

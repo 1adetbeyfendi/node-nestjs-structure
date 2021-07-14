@@ -10,6 +10,7 @@ import {
   ICreateCommasSmartTradeTakeProfit,
   ICreateTradeLeverage,
   ICreateTradePosition,
+  OrderTypeEnums,
 } from '../interfaces/commas.interface';
 
 export class CreateCommasSmartTrade {
@@ -132,17 +133,23 @@ export class CreateCommasSmartTrade {
           break;
 
         default:
-          throw new Error('CreateTradePositionEnums');
+          throw new Error('CreateTradePositionEnums switch error');
           break;
       } // switch end
 
       const positionResponse: Position = {
         order_type: position.order_type,
         type: position.position === PositionDirectionEnum.LONG ? 'buy' : 'sell',
+
         units: {
           value: this.quantity,
         },
       };
+      if (position.order_type === OrderTypeEnums.LIMIT) {
+        positionResponse.price = {
+          value: position.limitBuy,
+        };
+      }
       return { status: true, msg: '', data: positionResponse };
     } catch (error) {
       return { status: false, msg: error, data: undefined };
@@ -266,6 +273,8 @@ export class CreateCommasSmartTrade {
     try {
       const steps: Step[] = [];
 
+      // volumeler ayarlanacak
+
       takeProfitDatas.map((takeProfitData) => {
         //
         const stepData = this._generateStep(takeProfitData);
@@ -316,6 +325,7 @@ export class CreateCommasSmartTrade {
       //   enabled : takeProfitData.trailing_status,
       // }
     }; // step end
+    // TODO: Volume hesaplamak için max roe alınacak
 
     if (takeProfitData.trailing_status) {
       const trailingPercentCalc = roiCalculation({

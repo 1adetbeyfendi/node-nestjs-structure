@@ -32,8 +32,7 @@ export class UserTradesService {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     private _tradeDataService: TradeDataService,
     private eventEmitter: EventEmitter2,
-    private readonly configService: ConfigService,
-    @Inject(PUB_SUB) private pubSub: RedisPubSub,
+    private readonly configService: ConfigService, // @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {
     // super();
     this.api = tradeCommasService.generateApi();
@@ -44,8 +43,12 @@ export class UserTradesService {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   // eslint-disable-next-line @typescript-eslint/typedef
   private _running: boolean = false;
-
-  @Interval('user-trade', 3000)
+  // iter_greater = (value: MyOrder[]) => {
+  //   value.map((data) => {
+  //     return value > 5 ? value : undefined;
+  //   });
+  // };
+  @Interval('user-trade', 1000)
   async checkRemote() {
     // console.log('user-trade-1000, working fetch');
 
@@ -54,6 +57,7 @@ export class UserTradesService {
     // TODO: Event PositionChange
     // console.log('asdfasdfasdg');
     // await sleep(5000);
+
     if (this.configService.get<boolean>('commas.autoFetch')) {
       if (!this._running) {
         this._running = true;
@@ -61,34 +65,63 @@ export class UserTradesService {
         const positions = await this.api.getSmartTradeHistory({
           status: 'active',
         });
+
         // if (this.localOrders.length == 0 && positions.length !== 0) {
         //   this.localOrders = positions;
         // }
         this.logger.log('remote.commas.check.complete');
         // this.lastCheck = Date.now();
-        const diff = _.difference(positions, this.localOrders);
+        // if(){
+
+        // }
+
+        // const diff = _.difference(positions, this._tradeDataService._orders);
+        // if(positions.length === 0){
+
+        // }else{
+          
+        // }
+        const diff = _.isEqual(positions, this._tradeDataService._orders);
+        // console.log('diff =>>> ', diff);
+        if (diff === false) {
+          this._tradeDataService._orders = positions;
+          // send event
+
+          this.eventEmitter.emit('position.update', {
+            // diffData: diff,
+            currentOrders: positions,
+          });
+        }
         // console.log('positions : ', positions);
         // console.log('local Position : ', this.localOrders);
         // console.log('diff : ', diff);
 
         // console.log(diff);
-        if (diff.length > 0) {
-          // değişklik Var Demektir
-          this.eventEmitter.emit('position.update', {
-            diffData: diff,
-            currentOrders: positions,
-          });
-          // this.pubSub.publish(POST_ADDED_EVENT, { postAdded: payload.currentOrders });
-        } else {
-          // değişiklik yok
-        }
+        // position kapatılmışsa yinede göndermek için
+        // if (diff.length > 0) {
+        //   // değişklik Var Demektir
+        //   // this.eventEmitter.emit('position.update', {
+        //   //   diffData: diff,
+        //   //   currentOrders: positions,
+        //   // });
+        //   // this.pubSub.publish(POST_ADDED_EVENT, { postAdded: payload.currentOrders });
+        // } else {
+        //   // değişiklik yok
+        // }
         // this.logger.debug(diff);
         this._running = false;
       } else {
         this.logger.debug('cron çalıştığından dolayı remote position not run ');
+        this._retry = this._retry + 1;
+        if (this._retry > 5) {
+          this.logger.error('cron max retry sayısı aşıldı');
+          this._retry = 0;
+          // throw new Error("");
+        }
       }
     }
   }
+  _retry = 0;
   // @Interval(1000)
   // diffPositions() {
   //   // console.log('asdfasdgasdgf');
@@ -101,12 +134,12 @@ export class UserTradesService {
   // }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   @OnEvent('position.update')
-  handleOrderCreatedEvent(payload: { diffData: MyOrder[]; currentOrders: MyOrder[] }): void {
-    this.logger.log('position.update event', JSON.stringify(payload.diffData));
+  handleOrderCreatedEvent(payload: { currentOrders: MyOrder[] }): void {
+    // this.logger.log('position.update event', JSON.stringify(payload.diffData));
     // eslint-disable-next-line no-underscore-dangle
     this._tradeDataService._orders = payload.currentOrders;
-    this.localOrders = payload.currentOrders;
-    console.log(payload.currentOrders);
+    // this.localOrders = payload.currentOrders;
+    // console.log('eventss => ', payload.diffData);
 
     // this.pubSub.publish(POST_ADDED_EVENT, { postAdded: payload.currentOrders });
     // TODO: Graphql Change Event

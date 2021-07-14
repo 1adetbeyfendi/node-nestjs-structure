@@ -35,7 +35,7 @@ export class TradeCommasService {
     secret = 'a7026c6378cf594d9d1f4cd11f1b0fe2d34a521917ecda6156f83bb6e8623b607bfb08671ea203e340634e0f34665c5543b8e375c892fb32b363938e52ef66c7d16bde244ce61e7b697dcbcdbb7dce451a2a13009d885c1acc773a0b50855d8008cef74a',
   ) {
     return new API({
-      key, // Optional if only query endpoints with no security requirement
+      key: key, // Optional if only query endpoints with no security requirement
       secrets: secret, // Optional
       timeout: 60000, // Optional, in ms, default to 30000
       errorHandler: (response, reject) => {
@@ -43,7 +43,7 @@ export class TradeCommasService {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { error, error_description } = response;
 
-        // console.log(response);
+        console.log(response);
 
         reject(new Error(error_description ?? error));
       },

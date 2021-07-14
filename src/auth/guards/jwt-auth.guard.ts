@@ -2,10 +2,24 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request } from 'express';
+import { Socket } from 'socket.io';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   public getRequest(context: ExecutionContext): Request {
+
+    console.log("type =>>>>>", context.getType());
+    
+    
+    // if(context.getType<){
+
+    // }
+    // context.switchToWs().getClient();
+    // if(context.switchToWs().getClient() === 'ws'){
+    // let client: Socket = context.switchToWs().getClient();
+    // console.log("socketContent => ", client);
+    //   // return client.handshake;
+    // }
     if (context.getType<GqlContextType>() === 'graphql') {
       const ctx = GqlExecutionContext.create(context).getContext();
       // console.log('jwtauthguard', ctx.req);

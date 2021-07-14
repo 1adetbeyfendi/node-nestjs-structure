@@ -25,7 +25,7 @@ export class ExchangeController {
 
   @Get('pairs/:code')
   getPairs(@Param('code') markCode: string): any {
-    // console.log(market_code);
+    console.log(markCode);
 
     return this.api.getMarketPairs({
       // eslint-disable-next-line object-shorthand

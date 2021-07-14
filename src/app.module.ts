@@ -15,6 +15,8 @@ import { GqlModule } from './gql';
 import { SampleModule } from './sample';
 import { TradesModule } from './trades/trades.module';
 import { ChatModule } from './chat/chat.module';
+import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -50,22 +52,32 @@ import { ChatModule } from './chat/chat.module';
         path: 'aws',
         module: AwsModule,
       },
-      {
-        path: 'test',
-        module: SampleModule,
-      },
+      // {
+      //   path: 'test',
+      //   module: SampleModule,
+      // },
     ]),
     // Service Modules
     CommonModule, // Global
     BaseModule,
-    SampleModule,
+    // SampleModule,
     AwsModule,
-    GqlModule,
+    // GqlModule,
     TradesModule,
-    PubSubModule,
+    // PubSubModule,
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     ChatModule,
+    UserModule,
+    // JwtModule.registerAsync({
+    //   inject: [ConfigService],
+
+    //   useFactory: (configService: ConfigService) => ({
+    //     secret: configService.get<string>('JWT_SECRET'),
+    //     signOptions: { expiresIn: '60s' },
+
+    //   }),
+    // }),
   ],
   providers: [
     // Global Guard, Authentication check on all routers
