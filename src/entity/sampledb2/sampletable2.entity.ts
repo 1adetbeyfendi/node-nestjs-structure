@@ -11,9 +11,9 @@ export class Sampletable2 {
   @Column('text', { nullable: true, name: 'content' })
   content?: string;
 
-  @Column('timestamp', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
+  @Column('date', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
   updated_at!: Date;
 
-  @Column('timestamp', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  @Column('date', { nullable: false, default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   created_at!: Date;
 }
