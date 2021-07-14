@@ -38,6 +38,6 @@ export const config = {
   REDIS_PORT: 6379,
   REDIS_DB: 6,
   JWT_SECRET: '8940d87d-c82c-4ae0-be5d-cd770487074c',
-  STRAPI_PATH:''
+  STRAPI_PATH:'http://localhost:1339'
 
 };
