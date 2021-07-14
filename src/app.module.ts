@@ -17,6 +17,7 @@ import { TradesModule } from './trades/trades.module';
 import { ChatModule } from './chat/chat.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { UserModule } from './user/user.module';
         synchronize: false,
         //...config.get('db'),
         type: "sqlite",
-        database: 'F:/DEVELOPER/repos/GIT/cryptobot/strapi_crypto/.tmp/data.db',
+        database: process.env.DB_LOCATION,
         logging: true,
       }),
       inject: [ConfigService],
@@ -44,9 +45,15 @@ import { UserModule } from './user/user.module';
     // Static Folder
     // https://docs.nestjs.com/recipes/serve-static
     // https://docs.nestjs.com/techniques/mvc
+    // ServeStaticModule.forRoot({
+    //   rootPath: `${__dirname}/../public`,
+    //   renderPath: '/',
+    // }),
     ServeStaticModule.forRoot({
-      rootPath: `${__dirname}/../public`,
-      renderPath: '/',
+      rootPath: join(__dirname, '..', 'public'),
+      renderPath : '/',
+      exclude: ['/api*','/app3'],
+
     }),
     // Module Router
     // https://github.com/nestjsx/nest-router
