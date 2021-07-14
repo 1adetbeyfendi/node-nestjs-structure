@@ -14,6 +14,13 @@ export const config = {
     },
   },
   foo: 'dev-bar',
+  DB_LOCATION: 'F:/DEVELOPER/repos/GIT/cryptobot/server/strapi_crypto/.tmp/data.db',
+  COMMAS_RELOAD_TIME: 3000,
+  // PORT: 8810,
+  // Redis
+  REDIS_HOST: '127.0.0.1',
+  REDIS_PORT: 6379,
+  REDIS_DB: 6,
+  JWT_SECRET: '8940d87d-c82c-4ae0-be5d-cd770487074c',
+  STRAPI_PATH: 'http://localhost:1337',
 };
-
-

@@ -48,7 +48,7 @@ export class UserTradesService {
   //     return value > 5 ? value : undefined;
   //   });
   // };
-  @Interval('user-trade', 1000)
+  @Interval('user-trade', Number(process.env.COMMAS_RELOAD_TIME) || 3000)
   async checkRemote() {
     // console.log('user-trade-1000, working fetch');
 
@@ -79,7 +79,7 @@ export class UserTradesService {
         // if(positions.length === 0){
 
         // }else{
-          
+
         // }
         const diff = _.isEqual(positions, this._tradeDataService._orders);
         // console.log('diff =>>> ', diff);

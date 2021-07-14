@@ -5,6 +5,7 @@
 // import { RedisClient } from 'redis';
 
 import { INestApplicationContext } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { RedisClient } from 'redis';
 import { Server } from 'socket.io';
@@ -36,7 +37,7 @@ export class RedisIoAdapter extends IoAdapter {
       ...options,
       cors: {
         origin: '*',
-      }
+      },
     };
 
     // console.log('optionsss =>>> ', customizeOptions);
@@ -53,8 +54,12 @@ export class RedisIoAdapter extends IoAdapter {
     //     next(err);
     //   }
     // });
-
-    const pubClient = new RedisClient({ host: 'localhost', port: 6379 });
+    // process.env.JWT_SECRET
+    const pubClient = new RedisClient({
+      host: '127.0.0.1',
+      port: Number(process.env.REDIS_PORT) || 6379,
+      db: 6,
+    });
     const subClient = pubClient.duplicate();
 
     server.adapter(createAdapter({ pubClient, subClient }));

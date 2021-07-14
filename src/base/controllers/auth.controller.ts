@@ -1,5 +1,6 @@
 import { Controller, Get, Post, UseGuards, Req, Res, Body, HttpService, HttpStatus } from '@nestjs/common';
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { ConfigService } from '@nestjs/config';
 import axios, { AxiosRequestConfig } from 'axios';
 import type { Request, Response } from 'express';
 import { loginDTO } from 'src/base/dto/login.dto';
@@ -12,7 +13,7 @@ import { ReqUser } from '../../common';
  */
 @Controller()
 export class AuthController {
-  constructor(private auth: AuthService, private httpService: HttpService) {}
+  constructor(private auth: AuthService, private httpService: HttpService, private configService: ConfigService) {}
 
   /**
    * See test/e2e/local-auth.spec.ts
@@ -46,7 +47,7 @@ export class AuthController {
   //   return this.auth.signJwt(<Payload>req.user);
   // }
   @Post('jwt/login')
-  public jwtLogin(@Body() loginData: loginDTO) {
+  public async jwtLogin(@Body() loginData: loginDTO, @Res() res: Response) {
     try {
       // const loginData = {};
 
@@ -62,15 +63,21 @@ export class AuthController {
         // data: data,
       };
       // axios(config)
-
+      const strapiPath = this.configService.get<string>('STRAPI_PATH');
       // this.httpService.post('http://localhost:1337/auth/local', data, config).toPromise()
-      return this.httpService
-        .post('http://localhost:1337/auth/local', data, config)
-        .toPromise()
-        .then((x) => {
-          // console.log(x);
-          return x.data;
-        });
+
+      const response = await axios.post(strapiPath + '/auth/local', data, config);
+      console.log(response.data);
+      return res.send(response.data);
+      // if (response.status == 200) {
+      //   // return {response.data};
+      //   res.send({ msg: 'bad-request', code: 400 });
+      //   // res.status(400).send();
+      // } else {
+      //   // return response;
+      //   res.send({ msg: 'bad-request', code: 400 });
+      // }
+
       // if (response.status === 200) {
       //   return response.data;
       // } else {
@@ -96,7 +103,10 @@ export class AuthController {
 
       // return await axios.post('http://localhost:1337/auth/local', JSON.stringify(loginData));
     } catch (error) {
-      return error;
+      // return error;
+      console.log(error);
+
+      res.status(400).send({ msg: 'Hata oluştu' });
     }
     // return this.auth.signJwt(<Payload>req.user);
   }
