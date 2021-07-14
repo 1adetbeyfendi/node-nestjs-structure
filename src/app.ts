@@ -32,7 +32,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // Express Middleware
-  middleware(app);
+  // middleware(app);
 
   const config = new DocumentBuilder()
     .setTitle('Cats example')
@@ -50,10 +50,9 @@ async function bootstrap(): Promise<void> {
     // )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('swagger', app, document);
 
-
-
+  app.setGlobalPrefix('api');
   app.useWebSocketAdapter(new RedisIoAdapter(app));
 
   await app.listen(process.env.PORT || 3000);

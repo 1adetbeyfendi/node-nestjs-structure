@@ -37,7 +37,7 @@ import { join } from 'path';
         synchronize: false,
         //...config.get('db'),
         type: 'sqlite',
-        database: process.env.DB_LOCATION,
+        database: config.get('DB_LOCATION'),
         logging: true,
       }),
       inject: [ConfigService],
@@ -52,7 +52,7 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       renderPath: '*',
-      exclude: ['/api*', '/app3*','/socket-io*'],
+      exclude: ['/api*', '/app3*', '/socket-io*'],
     }),
     // Module Router
     // https://github.com/nestjsx/nest-router
