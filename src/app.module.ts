@@ -1,11 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RouterModule } from 'nest-router';
 
 import { AwsModule } from './aws';
 import { BaseModule } from './base';
@@ -56,7 +55,7 @@ import { join } from 'path';
     // }),
     // Module Router
     // https://github.com/nestjsx/nest-router
-    RouterModule.forRoutes([
+    RouterModule.register([
       {
         path: 'aws',
         module: AwsModule,

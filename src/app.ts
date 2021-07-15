@@ -16,8 +16,12 @@ import { Logger } from './common';
 async function bootstrap(): Promise<void> {
   const isProduction = process.env.NODE_ENV === 'production';
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: isProduction ? false : undefined,
+    bufferLogs: true,
+    autoFlushLogs: true,
   });
+
+  app.useLogger(await app.resolve(Logger));
+
   app.setGlobalPrefix('api');
 
   // https://docs.nestjs.com/techniques/validation
@@ -29,7 +33,7 @@ async function bootstrap(): Promise<void> {
   );
 
   if (isProduction) {
-    app.useLogger(await app.resolve(Logger));
+    // app.useLogger(await app.resolve(Logger));
     app.enable('trust proxy');
   }
 
