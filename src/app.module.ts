@@ -49,11 +49,11 @@ import { ExchangeModule } from './exchange/exchange.module';
     //   rootPath: `${__dirname}/../public`,
     //   renderPath: '/',
     // }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'public'),
-    //   renderPath: '*',
-    //   exclude: ['/api*', '/app3*', '/socket-io*'],
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      renderPath: '*',
+      exclude: ['/api*', '/app3*', '/socket-io*'],
+    }),
     // Module Router
     // https://github.com/nestjsx/nest-router
     RouterModule.register([
