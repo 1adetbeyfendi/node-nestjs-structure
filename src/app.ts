@@ -18,6 +18,8 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: isProduction ? false : undefined,
   });
+  app.setGlobalPrefix('api');
+
   // https://docs.nestjs.com/techniques/validation
   app.useGlobalPipes(
     new ValidationPipe({
@@ -52,10 +54,11 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  app.setGlobalPrefix('api');
   app.useWebSocketAdapter(new RedisIoAdapter(app));
-
-  await app.listen(process.env.PORT || 3000);
+  const port = process.env.PORT || 3000;
+  console.log(`App Started Port : ${port}`);
+  
+  await app.listen(port);
 }
 
 // eslint-disable-next-line no-console

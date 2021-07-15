@@ -30,7 +30,9 @@ export const config = {
   },
   foo: 'pro-bar',
 
-  DB_LOCATION: '/var/www/vhosts/rambilisim.com/trade_backend/strapi_crypto/.tmp/data.db',
+  // DB_LOCATION: '/var/www/vhosts/rambilisim.com/trade_backend/strapi_crypto/.tmp/data.db',
+  DB_LOCATION: '../strapi_crypto/.tmp/data.db',
+
   COMMAS_RELOAD_TIME: 3000,
   PORT: 1338,
   // Redis

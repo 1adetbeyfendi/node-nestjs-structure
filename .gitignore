@@ -6,7 +6,6 @@ docs
 build
 public/*
 
-
 # Logs
 logs
 *.log
@@ -92,3 +91,4 @@ jspm_packages/
 
 # DynamoDB Local files
 .dynamodb/
+package-lock.json

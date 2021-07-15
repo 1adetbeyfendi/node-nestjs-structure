@@ -14,7 +14,8 @@ export const config = {
     },
   },
   foo: 'dev-bar',
-  DB_LOCATION: 'F:/DEVELOPER/repos/GIT/cryptobot/server/strapi_crypto/.tmp/data.db',
+  // DB_LOCATION: 'F:/DEVELOPER/repos/GIT/cryptobot/server/strapi_crypto/.tmp/data.db',
+  DB_LOCATION: '../strapi_crypto/.tmp/data.db',
   COMMAS_RELOAD_TIME: 3000,
   // PORT: 8810,
   // Redis
