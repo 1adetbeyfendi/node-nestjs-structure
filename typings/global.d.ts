@@ -1,16 +1,18 @@
+import express from 'express';
 import { Payload } from '../src/auth';
 
 declare global {
-  namespace Express {
-    interface Request {
+  export namespace Express {
+    export interface Request {
       id: string;
     }
-    interface Response{
-      
-    }
+    export interface Response {}
     // tslint:disable-next-line: no-empty-interface
     interface User extends Payload {}
   }
-
-
 }
+
+// declare type Request = express.Request;
+// declare type Response = express.Response;
+
+// declare global {}

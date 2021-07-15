@@ -17,6 +17,7 @@ import { ChatModule } from './chat/chat.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { join } from 'path';
+import { ExchangeModule } from './exchange/exchange.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { join } from 'path';
     EventEmitterModule.forRoot(),
     ChatModule,
     UserModule,
+    ExchangeModule,
     // JwtModule.registerAsync({
     //   inject: [ConfigService],
 

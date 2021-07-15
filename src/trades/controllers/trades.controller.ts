@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, SetMetadata, Res } from '@nestjs/common';
 import { API } from 'src/trades/helper/commas-repo';
 import { TradeCommasService, TradesService } from 'src/trades/services';
 import { CreateTradeDto } from 'src/trades/dto/create-trade.dto';
@@ -7,6 +7,8 @@ import { JwtAuthGuard, JwtPayload } from 'src/auth';
 import { User } from 'src/shared/user';
 import { ReqUser, Role, Roles, RolesGuard } from 'src/common';
 import { ICreateCommasSmartTrade } from 'src/trades/interfaces/commas.interface';
+import express from 'express';
+import _ from 'lodash';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 // @UseGuards(RolesGuard)
@@ -26,16 +28,28 @@ export class TradesController {
   //#region  crud
 
   @Post()
-  async create(@Body() createTradeDto: ICreateCommasSmartTrade, @ReqUser() user: JwtPayload) {
+  async create(@Body() createTradeDto: ICreateCommasSmartTrade, @ReqUser() user: JwtPayload, @Res() res: express.Response) {
     // console.log('createTradeDto ==> ', createTradeDto);
     // console.log('user ==>', user);
     // TODO: multi hesaplar için kullanıdan gelecke accountid yapılacak
     createTradeDto.accountId = user.accId;
 
-    const order = await this.commasService.generateSmartTrade(createTradeDto);
-    console.log(order);
+    // try {
 
-    return await this.api.smartTrade(order);
+    // } catch (error) {}
+    try {
+      const order = await this.commasService.generateSmartTrade(createTradeDto);
+      // console.log(order);
+
+      const orderResponse = await this.commasService.createSmartTrade(order);
+
+      res.send(orderResponse);
+    } catch (error) {
+      console.log(error);
+
+      res.status(400).send({ msg: 'hata oluştu', data: error });
+    }
+
     // return order;
     // TODO: Başarılı olursa store atılacak
     // return this.tradesService.create(createTradeDto);
@@ -64,12 +78,41 @@ export class TradesController {
   //#endregion
 
   //#region  trades
+  @Post('view')
+  async createView(@Body() createTradeDto: ICreateCommasSmartTrade, @ReqUser() user: JwtPayload, @Res() res: express.Response) {
+    createTradeDto.accountId = user.accId;
 
+    // try {
+
+    // } catch (error) {}
+    try {
+      const order = await this.commasService.generateSmartTrade(createTradeDto);
+      // console.log(order);
+
+      // const orderResponse = await this.commasService.createSmartTrade(order);
+
+      res.send(order);
+    } catch (error) {
+      console.log(error);
+
+      res.status(400).send({ msg: 'hata oluştu', data: error });
+    }
+  }
   @Get('history')
-  getHistory(@ReqUser() user) {
+  async getHistory(@ReqUser() user, @Res() res: express.Response) {
     console.log(user);
 
-    return this.api.getSmartTradeHistory();
+    let demo = await this.api.getSmartTradeHistory();
+    const filterResponse = demo.filter(x => {
+      return x.status.type !== 'waiting_targets'
+    })
+
+    // let response = demo.splice(0, 1);
+    // demo.splice(_.random(2), 1);
+    // let response = _.remove(demo,(n)=> {
+    //   return n.pair === 'USDT_BLZ'
+    // })
+    res.send(filterResponse);
   }
 
   @Get('actives')

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/typedef */
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { API } from 'src/trades/helper/commas-repo';
+import { SmartTradeParams } from 'src/trades/helper/commas-repo/types/types';
 import { CreateCommasSmartTrade } from 'src/trades/helper/generate-smart-trade';
 import { ICreateCommasSmartTrade } from 'src/trades/interfaces/commas.interface';
 
@@ -38,15 +39,15 @@ export class TradeCommasService {
       key: key, // Optional if only query endpoints with no security requirement
       secrets: secret, // Optional
       timeout: 60000, // Optional, in ms, default to 30000
-      errorHandler: (response, reject) => {
-        // Optional, Custom handler for 3Commas error
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { error, error_description } = response;
+      // errorHandler: (response, reject) => {
+      //   // Optional, Custom handler for 3Commas error
+      //   // eslint-disable-next-line @typescript-eslint/naming-convention
+      //   const { error, error_description } = response;
 
-        console.log(response);
+      //   console.log(response);
 
-        reject(new Error(error_description ?? error));
-      },
+      //   reject(new Error(error_description ?? error));
+      // },
     });
   }
 
@@ -106,4 +107,27 @@ export class TradeCommasService {
     //   note: '',
     // };
   }
+  async createSmartTrade(order: SmartTradeParams) {
+    try {
+      const orderResponse = await this.api.smartTrade(order);
+      console.log("orderResponse==>",orderResponse);
+      
+      if (orderResponse.status.type !== 'failed') {
+        // TODO: user msg
+        return orderResponse;
+      } else {
+        throw orderResponse.status;
+      }
+      // if(orderResponse.status.type === 'idl'){
+
+      // }
+    } catch (error) {
+      console.log("orderResponseError==>",error);
+
+      // return error;
+      throw error;
+
+    }
+  }
+  // public async
 }

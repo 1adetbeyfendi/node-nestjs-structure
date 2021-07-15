@@ -16,7 +16,8 @@
     "skipLibCheck": false,
 
     "incremental": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["@types/express"]
   },
   "include": ["typings/global.d.ts", "src/**/*"],
   "exclude": ["node_modules"]
