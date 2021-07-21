@@ -27,10 +27,7 @@ const WS = 'wss://ws.3commas.io/websocket';
 export class API {
   private readonly KEY: string;
   private readonly SECRETS: string;
-  private readonly errorHandler?: (
-    response: ThreeCommasError,
-    reject: (reason?: any) => void,
-  ) => void | Promise<any>;
+  private readonly errorHandler?: (response: ThreeCommasError, reject: (reason?: any) => void) => void | Promise<any>;
   private axios: AxiosInstance;
   private ws?: WebSocket;
 
@@ -58,9 +55,7 @@ export class API {
         }
 
         const relativeUrl = config.url!.replace(config.baseURL!, '');
-        const signature = this.SECRETS
-          ? sign(this.SECRETS, relativeUrl, payload)
-          : '';
+        const signature = this.SECRETS ? sign(this.SECRETS, relativeUrl, payload) : '';
         const newConfig = {
           ...config,
           data,
@@ -78,12 +73,7 @@ export class API {
     );
   }
 
-  private request(
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-    version: 1 | 2,
-    path: string,
-    payload?: any,
-  ): Promise<any> {
+  private request(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', version: 1 | 2, path: string, payload?: any): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         const { data } = await this.axios({
@@ -91,6 +81,7 @@ export class API {
           url: `${ENDPOINT}${version === 1 ? V1 : V2}${path}`,
           params: method === 'GET' ? payload : undefined,
           data: method !== 'GET' ? payload : undefined,
+          timeout: 3000,
         });
         resolve(data);
       } catch (e) {
@@ -148,44 +139,23 @@ export class API {
   }
 
   async getActiveTradeEntities(account_id: number | string) {
-    return await this.request(
-      'GET',
-      1,
-      `/accounts/${account_id}/active_trading_entities`,
-    );
+    return await this.request('GET', 1, `/accounts/${account_id}/active_trading_entities`);
   }
 
   async sellAllToUSD(account_id: number | string) {
-    return await this.request(
-      'POST',
-      1,
-      `/accounts/${account_id}/sell_all_to_usd`,
-    );
+    return await this.request('POST', 1, `/accounts/${account_id}/sell_all_to_usd`);
   }
 
   async sellAllToBTC(account_id: number | string) {
-    return await this.request(
-      'POST',
-      1,
-      `/accounts/${account_id}/sell_all_to_btc`,
-    );
+    return await this.request('POST', 1, `/accounts/${account_id}/sell_all_to_btc`);
   }
 
   async getBalanceChartData(account_id: number | string, params: any) {
-    return await this.request(
-      'GET',
-      1,
-      `/accounts/${account_id}/balance_chart_data`,
-      params,
-    );
+    return await this.request('GET', 1, `/accounts/${account_id}/balance_chart_data`, params);
   }
 
   async loadBalances(account_id: number | string) {
-    return await this.request(
-      'POST',
-      1,
-      `/accounts/${account_id}/load_balances`,
-    );
+    return await this.request('POST', 1, `/accounts/${account_id}/load_balances`);
   }
 
   async renameExchangeAccount(account_id: number | string, name: string) {
@@ -199,19 +169,11 @@ export class API {
   }
 
   async getPieChartData(account_id: number | string) {
-    return await this.request(
-      'POST',
-      1,
-      `/accounts/${account_id}/pie_chart_data`,
-    );
+    return await this.request('POST', 1, `/accounts/${account_id}/pie_chart_data`);
   }
 
   async getAccountTableData(account_id: number | string) {
-    return await this.request(
-      'POST',
-      1,
-      `/accounts/${account_id}/account_table_data`,
-    );
+    return await this.request('POST', 1, `/accounts/${account_id}/account_table_data`);
   }
 
   async getAccountInfo(account_id?: number) {
@@ -219,21 +181,14 @@ export class API {
   }
 
   async getLeverageData(account_id: number | string, pair: string) {
-    return await this.request(
-      'GET',
-      1,
-      `/accounts/${account_id}/leverage_data`,
-      { pair },
-    );
+    return await this.request('GET', 1, `/accounts/${account_id}/leverage_data`, { pair });
   }
 
   async changeUserMode(mode: 'paper' | 'real') {
     return await this.request('POST', 1, '/users/change_mode', { mode });
   }
 
-  async getSmartTradeHistory(
-    params?: SmartTradeHistoryParams,
-  ): Promise<Order[]> {
+  async getSmartTradeHistory(params?: SmartTradeHistoryParams): Promise<Order[]> {
     return await this.request('GET', 2, '/smart_trades', params);
   }
 
@@ -254,12 +209,7 @@ export class API {
   }
 
   async averageSmartTrade(id: number, params: any): Promise<Order> {
-    return await this.request(
-      'POST',
-      2,
-      `/smart_trades/${id}/add_funds`,
-      params,
-    );
+    return await this.request('POST', 2, `/smart_trades/${id}/add_funds`, params);
   }
 
   async closeSmartTrade(id: number): Promise<Order> {
@@ -291,19 +241,11 @@ export class API {
   }
 
   async closeSubTrade(smartTradeId: number, subTradeId: number) {
-    return await this.request(
-      'POST',
-      2,
-      `/smart_trades/${smartTradeId}/trades/${subTradeId}/close_by_market`,
-    );
+    return await this.request('POST', 2, `/smart_trades/${smartTradeId}/trades/${subTradeId}/close_by_market`);
   }
 
   async cancelSubTrade(smartTradeId: number, subTradeId: number) {
-    return await this.request(
-      'DELETE',
-      2,
-      `/smart_trades/${smartTradeId}/trades/${subTradeId}`,
-    );
+    return await this.request('DELETE', 2, `/smart_trades/${smartTradeId}/trades/${subTradeId}`);
   }
 
   async getBots(
@@ -358,11 +300,7 @@ export class API {
     return JSON.stringify(idetifier);
   }
 
-  private subscribe(
-    channel: Channel,
-    url: string,
-    callback?: (data: WebSocket.Data) => void,
-  ) {
+  private subscribe(channel: Channel, url: string, callback?: (data: WebSocket.Data) => void) {
     const payload = JSON.stringify({
       identifier: this.buildIdentifier(channel, url),
       command: 'subscribe',

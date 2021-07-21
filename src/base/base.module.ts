@@ -7,7 +7,16 @@ import { AuthModule } from '../auth';
 import * as controllers from './controllers';
 
 @Module({
-  imports: [TerminusModule, AuthModule, HttpModule, TypeOrmModule.forFeature([UsersPermissionsUser, UserMarkets])], // Authentication
+  imports: [
+    TerminusModule,
+    AuthModule,
+    HttpModule.register({
+      timeout: 3000,
+      maxRedirects: 2,
+    }),
+
+    TypeOrmModule.forFeature([UsersPermissionsUser, UserMarkets]),
+  ], // Authentication
   controllers: Object.values(controllers),
 })
 export class BaseModule {}
