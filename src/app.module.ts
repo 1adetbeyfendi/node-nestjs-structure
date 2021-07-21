@@ -18,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { join } from 'path';
 import { ExchangeModule } from './exchange/exchange.module';
+import { SentryModule } from '@ntegral/nestjs-sentry';
 
 @Module({
   imports: [
@@ -52,7 +53,7 @@ import { ExchangeModule } from './exchange/exchange.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       renderPath: '*',
-      exclude: ['/api*', '/app3*', '/socket-io*'],
+      exclude: ['/api*', '/app3*', '/socket-io*','/swagger*'],
     }),
     // Module Router
     // https://github.com/nestjsx/nest-router
@@ -79,6 +80,13 @@ import { ExchangeModule } from './exchange/exchange.module';
     ChatModule,
     UserModule,
     ExchangeModule,
+    SentryModule.forRoot({
+      dsn: 'https://5a32f9e4e53e47d9989fdb4c3aabf8ae@o925111.ingest.sentry.io/5873742',
+      debug: true,
+     // environment: 'dev' || 'production' || 'some_environment',
+     // release: 'some_release' || null, // must create a release in sentry.io dashboard
+      logLevel: 2, //based on sentry.io loglevel //
+    }),
     // JwtModule.registerAsync({
     //   inject: [ConfigService],
 

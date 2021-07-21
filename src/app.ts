@@ -14,6 +14,8 @@ import { Logger } from './common';
  * https://github.com/nestjs/nest/issues/2249#issuecomment-494734673
  */
 async function bootstrap(): Promise<void> {
+  console.log('AppMode : ', process.env.NODE_ENV);
+
   const isProduction = process.env.NODE_ENV === 'production';
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
@@ -61,7 +63,7 @@ async function bootstrap(): Promise<void> {
   app.useWebSocketAdapter(new RedisIoAdapter(app));
   const port = process.env.PORT || 3000;
   console.log(`App Started Port : ${port}`);
-  
+
   await app.listen(port);
 }
 

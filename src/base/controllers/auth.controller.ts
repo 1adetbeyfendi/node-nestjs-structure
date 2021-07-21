@@ -13,7 +13,7 @@ import { ReqUser } from '../../common';
  */
 @Controller()
 export class AuthController {
-  constructor(private auth: AuthService, private httpService: HttpService, private configService: ConfigService) {}
+  constructor(private auth: AuthService, private configService: ConfigService) {}
 
   /**
    * See test/e2e/local-auth.spec.ts

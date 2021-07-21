@@ -4,6 +4,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Interval } from '@nestjs/schedule';
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import * as _ from 'lodash';
 import { PUB_SUB } from 'src/common';
@@ -28,6 +29,7 @@ export class UserTradesService {
   private localOrders: MyOrder[] = [];
 
   constructor(
+    @InjectSentry() private readonly client: SentryService,
     public tradeCommasService: TradeCommasService,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     private _tradeDataService: TradeDataService,
@@ -60,60 +62,47 @@ export class UserTradesService {
 
     if (this.configService.get<boolean>('commas.autoFetch')) {
       if (!this._running) {
-        this._running = true;
         // await sleep(5000);
-        const positions = await this.api.getSmartTradeHistory({
-          status: 'active',
-        });
-
-        // if (this.localOrders.length == 0 && positions.length !== 0) {
-        //   this.localOrders = positions;
-        // }
-        this.logger.log('remote.commas.check.complete');
-        // this.lastCheck = Date.now();
-        // if(){
-
-        // }
-
-        // const diff = _.difference(positions, this._tradeDataService._orders);
-        // if(positions.length === 0){
-
-        // }else{
-
-        // }
-        const diff = _.isEqual(positions, this._tradeDataService._orders);
-        // console.log('diff =>>> ', diff);
-        if (diff === false) {
-          this._tradeDataService._orders = positions;
-          // send event
-
-          this.eventEmitter.emit('position.update', {
-            // diffData: diff,
-            currentOrders: positions,
+        try {
+          this._running = true;
+          
+          const positions = await this.api.getSmartTradeHistory({
+            status: 'active',
           });
-        }
-        // console.log('positions : ', positions);
-        // console.log('local Position : ', this.localOrders);
-        // console.log('diff : ', diff);
+  
+  
+          this.logger.log('remote.commas.check.complete');
+  
+          const diff = _.isEqual(positions, this._tradeDataService._orders);
+          // console.log('diff =>>> ', diff);
+          if (diff === false) {
+            this._tradeDataService._orders = positions;
+            // send event
+  
+            this.eventEmitter.emit('position.update', {
+              // diffData: diff,
+              currentOrders: positions,
+            });
+          }
+  
+          this._running = false;
 
-        // console.log(diff);
-        // position kapatılmışsa yinede göndermek için
-        // if (diff.length > 0) {
-        //   // değişklik Var Demektir
-        //   // this.eventEmitter.emit('position.update', {
-        //   //   diffData: diff,
-        //   //   currentOrders: positions,
-        //   // });
-        //   // this.pubSub.publish(POST_ADDED_EVENT, { postAdded: payload.currentOrders });
-        // } else {
-        //   // değişiklik yok
-        // }
-        // this.logger.debug(diff);
-        this._running = false;
+        } catch (error) {
+          this.client.instance().captureException(error)
+          // Sentry.captureException(err);
+          // console.log(error);
+          
+          this._running = false;
+          
+          
+        }
+       
       } else {
         this.logger.debug('cron çalıştığından dolayı remote position not run ');
         this._retry = this._retry + 1;
         if (this._retry > 5) {
+          this._running = false;
+
           this.logger.error('cron max retry sayısı aşıldı');
           this._retry = 0;
           // throw new Error("");
