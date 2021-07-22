@@ -65,40 +65,37 @@ export class UserTradesService {
         // await sleep(5000);
         try {
           this._running = true;
-          
+
           const positions = await this.api.getSmartTradeHistory({
             status: 'active',
           });
-  
-  
+
           this.logger.log('remote.commas.check.complete');
-  
+
           const diff = _.isEqual(positions, this._tradeDataService._orders);
           // console.log('diff =>>> ', diff);
           if (diff === false) {
             this._tradeDataService._orders = positions;
             // send event
-  
+
             this.eventEmitter.emit('position.update', {
               // diffData: diff,
               currentOrders: positions,
             });
           }
-  
-          this._running = false;
 
+          this._running = false;
         } catch (error) {
-          this.client.instance().captureException(error)
+          this.client.instance().captureException(error);
           // Sentry.captureException(err);
           // console.log(error);
-          
+
           this._running = false;
-          
-          
         }
-       
       } else {
         this.logger.debug('cron çalıştığından dolayı remote position not run ');
+        await sleep(1000);
+
         this._retry = this._retry + 1;
         if (this._retry > 5) {
           this._running = false;
@@ -156,3 +153,11 @@ export class UserTradesService {
 // }
 
 const POST_ADDED_EVENT = 'postAdded';
+
+export function sleep(wait: number = 1000) {
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      return resolve(true);
+    }, wait);
+  });
+}
