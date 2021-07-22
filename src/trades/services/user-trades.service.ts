@@ -138,7 +138,7 @@ export class UserTradesService {
   }
 
   sleep(wait: number = 1000) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
         return resolve(true);
       }, wait);
