@@ -94,7 +94,7 @@ export class UserTradesService {
         }
       } else {
         this.logger.debug('cron çalıştığından dolayı remote position not run ');
-        await sleep(1000);
+        await this.sleep(1000);
 
         this._retry = this._retry + 1;
         if (this._retry > 5) {
@@ -136,6 +136,14 @@ export class UserTradesService {
 
     // handle and process "OrderCreatedEvent" event
   }
+
+  sleep(wait: number = 1000) {
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        return resolve(true);
+      }, wait);
+    });
+  }
 }
 
 // class KeyValuePair<T, U> {
@@ -153,11 +161,3 @@ export class UserTradesService {
 // }
 
 const POST_ADDED_EVENT = 'postAdded';
-
-export function sleep(wait: number = 1000) {
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      return resolve(true);
-    }, wait);
-  });
-}
