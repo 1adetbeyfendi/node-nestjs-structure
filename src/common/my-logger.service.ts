@@ -41,14 +41,21 @@ export class MyLogger implements LoggerService {
         }),
       ],
     });
+    this.logger.add(
+      new winston.transports.Console({
+        // format: winston.format.simple(),
+        format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+        level: 'debug',
+      }),
+    );
     if (process.env.NODE_ENV !== 'production') {
-      this.logger.add(
-        new winston.transports.Console({
-          // format: winston.format.simple(),
-          format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
-          level: 'debug',
-        }),
-      );
+      // this.logger.add(
+      //   new winston.transports.Console({
+      //     // format: winston.format.simple(),
+      //     format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+      //     level: 'debug',
+      //   }),
+      // );
       this.logger.add(
         new winston.transports.File({
           // format: winston.format.simple(),
@@ -75,7 +82,7 @@ export class MyLogger implements LoggerService {
     //   this.logger.log('info', `${message}`);
     // }
   }
-  error(message: any, trace?: string, ex?:any) {
+  error(message: any, trace?: string, ex?: any) {
     // send telegram
     this.logger.log('error', `${this.context} - ${trace ? trace : ''} -  ${message}`);
     // if (context) {
@@ -96,5 +103,9 @@ export class MyLogger implements LoggerService {
   }
   verbose?(message: any) {
     this.logger.log('verbose', `${this.context} - ${message}`);
+  }
+
+  info(message: any) {
+    this.logger.log('info', `${this.context} - ${message}`);
   }
 }
