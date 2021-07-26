@@ -24,7 +24,7 @@ export class FetchConsumer {
     // this.logger.debug(job.data);
     // throw new Error("");
     try {
-
+      this.logger.debug('process Starting ');
       // const userId = job.data.userId;
 
       // this.logger.debug(`${userId} start process`);

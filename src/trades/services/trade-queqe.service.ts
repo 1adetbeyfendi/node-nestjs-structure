@@ -1,6 +1,7 @@
+import { MyLogger } from './../../common/my-logger.service';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { MyOrder } from 'src/gql/models/positions.model';
-import { Order } from 'src/trades/helper/commas-repo/types/generated-types';
+import { Order, PositionStatus } from 'src/trades/helper/commas-repo/types/generated-types';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TradeCommasService } from 'src/trades/services';
 import { TradeDataService } from './trade-data.service';
@@ -15,7 +16,7 @@ import { Queue } from 'bull';
 
 @Injectable()
 export class TradeQueqeService {
-  logger = new Logger(TradeQueqeService.name);
+  logger = new MyLogger(TradeQueqeService.name);
   constructor(
     private configService: ConfigService,
     private tradeService: TradeDataService,
@@ -42,15 +43,23 @@ export class TradeQueqeService {
           // status: 'active',
         });
 
+        const pos = positions.filter((x) => x.status.type === 'waiting_targets');
+        // console.log(pos);
+
+        // positions.filter(x => {
+        //   x.position.status
+        // })
+
         // console.log(positions)
         // console.log(this.tradeService._orders)
-        if (this.diffPosition(positions, this.tradeService._orders)) {
+        const diffs = await this.getDiff(pos, this.tradeService._orders);
+        if (diffs.news.length > 0 || diffs.deleteds.length > 0) {
           // pozisyonda değişiklik varsa
           // localde ki pozisyon datayı kaydediyorum
           // this.tradeService._orders = positions;
 
           this.logger.debug('değişiklik var');
-          this.sendPositionEvent(positions);
+          this.sendPositionEvent(pos);
         } else {
           this.logger.debug('değişiklik yok');
         }
@@ -66,9 +75,39 @@ export class TradeQueqeService {
   }
 
   private diffPosition(remoteOrders: Order[], localOrders: MyOrder[]) {
-    const diff = _.isEqual(remoteOrders, localOrders);
+    // const diff = _.isEqual(remoteOrders, localOrders);
+    // this.getDiff()
+    // return diff;
+  }
 
-    return diff;
+  getDiff(remoteOrders: Order[], localOrders: MyOrder[]): Promise<Record<'nochanges' | 'news' | 'deleteds', Order[]>> {
+    // this.deletedPositions;
+    // this.return.
+    // this.remotePositions.filter(x => )
+    const returns: Record<'nochanges' | 'news' | 'deleteds', MyOrder[]> = {
+      deleteds: [],
+      news: [],
+      nochanges: [],
+    };
+    return new Promise((resolve, reject) => {
+      // returns.nochanges = _.filter(remoteOrders, (x) =>
+      //   _.some(localOrders, (y) => x.status.type === y.status.type || ),
+      // );
+      returns.deleteds = _.filter(
+        localOrders,
+        // (x) => !_.some(remoteOrders, (y) => x.status.type === y.status.type && x.pair === y.pair && x.profit.roe === x.profit.roe),
+        (x) => !_.some(remoteOrders, (y) => x.status.type === y.status.type && x.pair === y.pair && x.profit.roe === y.profit.roe),
+      );
+      returns.news = _.filter(
+        remoteOrders,
+        // (x) => !_.some(localOrders, (y) => x.status.type === y.status.type && x.pair === y.pair && x.profit.roe === x.profit.roe),
+        (x) => !_.some(localOrders, (y) => x.status.type === y.status.type && x.pair === y.pair && x.profit.roe === y.profit.roe),
+      );
+
+      resolve(returns);
+    });
+
+    // _.filter()
   }
   private sendPositionEvent(currentOrder: MyOrder[]) {
     // send event
