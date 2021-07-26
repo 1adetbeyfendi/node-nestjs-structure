@@ -1,3 +1,4 @@
+import { MyLogger } from './common/my-logger.service';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -20,9 +21,10 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
     autoFlushLogs: true,
+    logger: new MyLogger(),
   });
-
-  app.useLogger(await app.resolve(Logger));
+  
+  // app.useLogger(await app.resolve(Logger));
 
   app.setGlobalPrefix('api');
 

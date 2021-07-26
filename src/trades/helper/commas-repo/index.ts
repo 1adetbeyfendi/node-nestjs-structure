@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import Axios, { AxiosError, AxiosInstance } from 'axios';
+import Axios, { AxiosError, AxiosInstance, CancelToken } from 'axios';
 import WebSocket from 'ws';
 import {
   APIOptions,
@@ -18,6 +18,7 @@ import { Convert, Order } from './types/generated-types';
 // import qs as sq from 'qs';
 
 import * as qs from 'qs';
+import axios from 'axios';
 
 const ENDPOINT = 'https://api.3commas.io';
 const V1 = '/public/api/ver1';
@@ -76,13 +77,25 @@ export class API {
   private request(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', version: 1 | 2, path: string, payload?: any): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
+        // const CancelToken = axios.CancelToken;
+        // const source = CancelToken.source();
+
+        // const st = setTimeout(() => {
+        //   // this.logger.error(`getOtherPosition ${uid} axios timeout custom 5000 `);
+        //   source.cancel();
+        // },3000 );
+        // if(){
+
+        // }
         const { data } = await this.axios({
           method,
           url: `${ENDPOINT}${version === 1 ? V1 : V2}${path}`,
           params: method === 'GET' ? payload : undefined,
           data: method !== 'GET' ? payload : undefined,
-          timeout: 3000,
+          timeout: 10000,
+          // cancelToken: source.token,
         });
+        // st.unref();
         resolve(data);
       } catch (e) {
         const error = e as AxiosError<ThreeCommasError>;

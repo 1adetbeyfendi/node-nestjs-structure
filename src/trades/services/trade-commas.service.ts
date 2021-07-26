@@ -31,14 +31,14 @@ export class TradeCommasService {
     // super();
   }
 
-  generateApi(
+  private generateApi(
     key = '88506c64f8204cc5b1dc99e9dd72aab05b8129911b8040929603136105719f6e',
     secret = 'a7026c6378cf594d9d1f4cd11f1b0fe2d34a521917ecda6156f83bb6e8623b607bfb08671ea203e340634e0f34665c5543b8e375c892fb32b363938e52ef66c7d16bde244ce61e7b697dcbcdbb7dce451a2a13009d885c1acc773a0b50855d8008cef74a',
   ) {
     return new API({
       key: key, // Optional if only query endpoints with no security requirement
       secrets: secret, // Optional
-      timeout: 60000, // Optional, in ms, default to 30000
+      timeout: 5000, // Optional, in ms, default to 30000
       // errorHandler: (response, reject) => {
       //   // Optional, Custom handler for 3Commas error
       //   // eslint-disable-next-line @typescript-eslint/naming-convention

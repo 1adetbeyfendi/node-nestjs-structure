@@ -17,7 +17,7 @@ export const PUB_SUB = 'PUB_SUB';
         new RedisPubSub({
           connection: {
             host: configService.get<string>('REDIS_HOST'),
-            port: configService.get<string>('REDIS_PORT'),
+            port: configService.get<number>('REDIS_PORT'),
           },
         }),
       inject: [ConfigService],

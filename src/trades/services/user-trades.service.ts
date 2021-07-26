@@ -37,77 +37,11 @@ export class UserTradesService {
     private readonly configService: ConfigService, // @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {
     // super();
-    this.api = tradeCommasService.generateApi();
+    this.api = tradeCommasService.api;
     // eventEmitter.emit('position.service.status', { status: true });
   }
 
-  // @Interval('user-trade', 1000)
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  // eslint-disable-next-line @typescript-eslint/typedef
-  private _running: boolean = false;
-  // iter_greater = (value: MyOrder[]) => {
-  //   value.map((data) => {
-  //     return value > 5 ? value : undefined;
-  //   });
-  // };
-  @Interval('user-trade', Number(process.env.COMMAS_RELOAD_TIME) || 3000)
-  async checkRemote() {
-    // console.log('user-trade-1000, working fetch');
-
-    // TODO: remote Fetch Positions
-    // TODO: diff localposition and remote position
-    // TODO: Event PositionChange
-    // console.log('asdfasdfasdg');
-    // await sleep(5000);
-
-    if (this.configService.get<boolean>('commas.autoFetch')) {
-      if (!this._running) {
-        // await sleep(5000);
-        try {
-          this._running = true;
-
-          const positions = await this.api.getSmartTradeHistory({
-            status: 'active',
-          });
-
-          this.logger.log('remote.commas.check.complete');
-
-          const diff = _.isEqual(positions, this._tradeDataService._orders);
-          // console.log('diff =>>> ', diff);
-          if (diff === false) {
-            this._tradeDataService._orders = positions;
-            // send event
-
-            this.eventEmitter.emit('position.update', {
-              // diffData: diff,
-              currentOrders: positions,
-            });
-          }
-
-          this._running = false;
-        } catch (error) {
-          this.client.instance().captureException(error);
-          // Sentry.captureException(err);
-          // console.log(error);
-
-          this._running = false;
-        }
-      } else {
-        this.logger.debug('cron çalıştığından dolayı remote position not run ');
-        await this.sleep(1000);
-
-        this._retry = this._retry + 1;
-        if (this._retry > 5) {
-          this._running = false;
-
-          this.logger.error('cron max retry sayısı aşıldı');
-          this._retry = 0;
-          // throw new Error("");
-        }
-      }
-    }
-  }
-  _retry = 0;
+  
   // @Interval(1000)
   // diffPositions() {
   //   // console.log('asdfasdgasdgf');

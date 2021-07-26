@@ -17,7 +17,7 @@ import { ErrorResponseException } from 'src/common/exceptions/error-reponse.exce
 export class ExchangeController {
   public api: API;
   constructor(private readonly tradesService: TradesService, private readonly commasService: TradeCommasService) {
-    this.api = commasService.generateApi();
+    this.api = commasService.api;
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility

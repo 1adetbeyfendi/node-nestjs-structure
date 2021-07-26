@@ -14,7 +14,7 @@ import { TradesService } from 'src/trades/services/trades.service';
 export class TradeUserController {
   api: API;
   constructor(private readonly tradesService: TradesService, private readonly commasService: TradeCommasService) {
-    this.api = commasService.generateApi();
+    this.api = commasService.api;
   }
 
   @Get('me')

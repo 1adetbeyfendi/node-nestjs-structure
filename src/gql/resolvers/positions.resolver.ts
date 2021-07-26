@@ -22,7 +22,7 @@ export class PositionsResolver {
     public commasService: TradeCommasService,
     @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {
-    this.api = commasService.generateApi();
+    this.api = commasService.api;
   }
 
   @Query(() => String)

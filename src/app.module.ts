@@ -20,6 +20,7 @@ import { join } from 'path';
 import { ExchangeModule } from './exchange/exchange.module';
 import { SentryModule } from '@ntegral/nestjs-sentry';
 
+import { BullModule } from '@nestjs/bull';
 @Module({
   imports: [
     // Configuration
@@ -27,6 +28,16 @@ import { SentryModule } from '@ntegral/nestjs-sentry';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+    }),
+
+    // queqe
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+        db:5,
+        keyPrefix:'bull'
+      },
     }),
     // Database
     // https://docs.nestjs.com/techniques/database

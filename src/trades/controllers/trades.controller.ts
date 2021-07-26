@@ -22,7 +22,7 @@ import _ from 'lodash';
 export class TradesController {
   api: API;
   constructor(private readonly tradesService: TradesService, private readonly commasService: TradeCommasService) {
-    this.api = commasService.generateApi();
+    this.api = commasService.api;
   }
 
   //#region  crud
