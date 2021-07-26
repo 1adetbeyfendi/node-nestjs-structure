@@ -45,10 +45,7 @@ export class MyLogger implements LoggerService {
       this.logger.add(
         new winston.transports.Console({
           // format: winston.format.simple(),
-          format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.simple(),
-          ),
+          format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
           level: 'debug',
         }),
       );
@@ -64,7 +61,7 @@ export class MyLogger implements LoggerService {
     // this.files = new winston.transports.File({ filename: 'combined.log' });
     // this.console = new winston.transports.Console();
   }
-  log(message: any, context?: string) {
+  log(message: any, context?: string, ex?) {
     // this.
     // super.error.apply(this, arguments);
 
@@ -78,12 +75,9 @@ export class MyLogger implements LoggerService {
     //   this.logger.log('info', `${message}`);
     // }
   }
-  error(message: any, trace?: string) {
+  error(message: any, trace?: string, ex?:any) {
     // send telegram
-    this.logger.log(
-      'error',
-      `${this.context} - ${trace ? trace : ''} -  ${message}`,
-    );
+    this.logger.log('error', `${this.context} - ${trace ? trace : ''} -  ${message}`);
     // if (context) {
     // } else {
     //   this.logger.log('error', `${message}`);

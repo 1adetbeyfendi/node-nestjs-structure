@@ -1,3 +1,4 @@
+import { MyLogger } from './../common/my-logger.service';
 import { JwtPayload } from './../auth/auth.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -26,7 +27,7 @@ export class MySocketClients {
 }
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private readonly logger = new Logger(ChatGateway.name);
+  private readonly logger = new MyLogger(ChatGateway.name);
 
   @WebSocketServer() server: Server;
   users: number = 0;

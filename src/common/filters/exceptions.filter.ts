@@ -2,10 +2,11 @@ import { ArgumentsHost, Catch, ForbiddenException, HttpException, HttpStatus, Lo
 import { BaseExceptionFilter } from '@nestjs/core';
 import { GqlContextType, GqlExceptionFilter } from '@nestjs/graphql';
 import { ApolloError, ForbiddenError } from 'apollo-server-express';
+import { MyLogger } from 'src/common/my-logger.service';
 
 @Catch()
 export class ExceptionsFilter extends BaseExceptionFilter implements GqlExceptionFilter {
-  private readonly logger: Logger = new Logger();
+  private readonly logger = new MyLogger();
 
   public override catch(exception: unknown, host: ArgumentsHost): void {
     if (host.getType<GqlContextType>() === 'graphql') {
@@ -23,9 +24,7 @@ export class ExceptionsFilter extends BaseExceptionFilter implements GqlExceptio
   }
 
   private getStatus(exception: unknown): number {
-    return exception instanceof HttpException
-      ? exception.getStatus()
-      : HttpStatus.INTERNAL_SERVER_ERROR;
+    return exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
   }
 
   private gqlException(exception: unknown): void {
@@ -37,9 +36,7 @@ export class ExceptionsFilter extends BaseExceptionFilter implements GqlExceptio
     }
 
     const status = this.getStatus(exception);
-    const error = exception instanceof Error
-      ? exception
-      : new Error(String(exception));
+    const error = exception instanceof Error ? exception : new Error(String(exception));
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       this.logger.error(error.message, error.stack, 'UnhandledException');

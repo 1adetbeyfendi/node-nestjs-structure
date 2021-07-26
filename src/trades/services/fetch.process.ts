@@ -2,6 +2,7 @@ import { TradeQueqeService } from './trade-queqe.service';
 import { Processor, Process, OnQueueCompleted } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
+import { MyLogger } from 'src/common/my-logger.service';
 
 @Processor('fetch')
 export class FetchConsumer {
@@ -12,7 +13,7 @@ export class FetchConsumer {
     // super();
   }
 
-  private readonly logger = new Logger(FetchConsumer.name);
+  private readonly logger = new MyLogger(FetchConsumer.name);
 
   // @Process('transcode')
   @Process({

@@ -1,3 +1,4 @@
+import { MyLogger } from './../common/my-logger.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { WebSocketServer } from '@nestjs/websockets';
@@ -13,7 +14,7 @@ export class ChatService {
   /**
    *
    */
-  private readonly logger = new Logger(ChatService.name);
+  private readonly logger = new MyLogger(ChatService.name);
 
   //  private server: Server;
 

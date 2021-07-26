@@ -1,3 +1,4 @@
+import { MyLogger } from './../../common/my-logger.service';
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -20,7 +21,7 @@ import { TradeDataService } from './trade-data.service';
 @Injectable()
 export class UserTradesService {
   // eslint-disable-next-line @typescript-eslint/typedef
-  private readonly logger = new Logger(UserTradesService.name);
+  private readonly logger = new MyLogger(UserTradesService.name);
 
   /**
    *

@@ -1,3 +1,4 @@
+import { MyLogger } from './../../common/my-logger.service';
 import { Inject, Logger, UseGuards } from '@nestjs/common';
 import { Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
@@ -12,7 +13,7 @@ const POST_ADDED_EVENT = 'postAdded';
 
 @Resolver()
 export class PositionsResolver {
-  private readonly logger = new Logger(PositionsResolver.name);
+  private readonly logger = new MyLogger(PositionsResolver.name);
   /**
    *
    */
