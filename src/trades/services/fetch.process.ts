@@ -25,7 +25,7 @@ export class FetchConsumer {
     // this.logger.debug(job.data);
     // throw new Error("");
     try {
-      this.logger.debug('process Starting ');
+      this.logger.log('process Starting ');
       // const userId = job.data.userId;
 
       // this.logger.debug(`${userId} start process`);
@@ -40,7 +40,7 @@ export class FetchConsumer {
     name: 'userTradeFetch',
   })
   async completeJobFetch(job: Job, result: any) {
-    this.logger.debug(`---> ${job.id} complete jobbbbb`);
+    this.logger.log(`---> ${job.id} complete jobbbbb`);
     // console.log('jobid => ', job.id, 'result => ', result);
   }
 }

@@ -58,10 +58,10 @@ export class TradeQueqeService {
           // localde ki pozisyon datayı kaydediyorum
           // this.tradeService._orders = positions;
 
-          this.logger.debug('değişiklik var');
+          this.logger.log('değişiklik var');
           this.sendPositionEvent(pos);
         } else {
-          this.logger.debug('değişiklik yok');
+          this.logger.log('değişiklik yok');
         }
       } catch (error) {
         this.logger.error('3commas remote pozisyon çekilirken bir sorun oluştu ' + JSON.stringify(error));
