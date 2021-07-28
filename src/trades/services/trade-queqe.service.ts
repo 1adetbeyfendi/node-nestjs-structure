@@ -157,6 +157,7 @@ export class TradeQueqeService {
               jobId: 'fetch-commas',
               attempts: 3,
               removeOnComplete: true,
+              removeOnFail: true,
               timeout: 3000,
             },
           );
