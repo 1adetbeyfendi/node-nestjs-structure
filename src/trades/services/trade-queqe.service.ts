@@ -64,6 +64,11 @@ export class TradeQueqeService {
           this.logger.log('değişiklik yok');
         }
       } catch (error) {
+        const pingRes = await this.commas.api.ping();
+        this.logger.info('3commas ping response = ' + JSON.stringify(pingRes));
+        if (pingRes.pong !== 'pong') {
+          this.logger.error('3commas ping response error ' + JSON.stringify(error));
+        }
         this.logger.error('3commas remote pozisyon çekilirken bir sorun oluştu ' + JSON.stringify(error));
         this.client.instance().captureException(error);
 
@@ -144,9 +149,7 @@ export class TradeQueqeService {
         const waitingJobs = await this.fetchQueue.count();
         this.logger.debug(waitingJobs);
 
-        if (waitingJobs > 0) {
-          this.logger.debug('bekleyen işler var ');
-        } else {
+        if (waitingJobs === 0) {
           // job ekleniyor
           this.fetchQueue.add(
             'userTradeFetch',
@@ -154,13 +157,33 @@ export class TradeQueqeService {
               userId: 'bar',
             },
             {
-              jobId: 'fetch-commas',
+              jobId: 'fetch-commas1',
+              attempts: 3,
+              removeOnComplete: true,
+              removeOnFail: true,
+              
+              timeout: 3000,
+            },
+          );
+        } else if (waitingJobs > 0 && waitingJobs < 2) {
+          this.logger.debug('2. gorev eklendi ');
+          // job ekleniyor
+
+          this.fetchQueue.add(
+            'userTradeFetch',
+            {
+              userId: 'bar',
+            },
+            {
+              jobId: 'fetch-commas2',
               attempts: 3,
               removeOnComplete: true,
               removeOnFail: true,
               timeout: 3000,
             },
           );
+        } else {
+          this.logger.debug('bekleyen işler var ');
         }
       } catch (error) {
         this.logger.error(`commas fetch Error ${JSON.stringify(error)}`);

@@ -18,7 +18,7 @@ export class FetchConsumer {
   // @Process('transcode')
   @Process({
     name: 'userTradeFetch',
-    concurrency: 2,
+    concurrency: 5,
   })
   async handleTranscode(job: Job) {
     // this.logger.debug('Start transcoding...');
